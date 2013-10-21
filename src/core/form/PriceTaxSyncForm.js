@@ -9,26 +9,34 @@
     Ext.define('Hatimeria.core.form.PriceTaxSyncForm', {
         extend: 'Ext.form.Panel',
         config: {
-            
+
             /**
              * Tax rate
              * @cfg {Number} vat
              */
             vat: 23,
-            
+
             /**
              * Name of netto field
              * @cfg {String} nettoFieldName
              */
             nettoFieldName: 'netto',
-            
+
             /**
              * Name of brutto field
-             * @cfg {String} 
+             * @cfg {String}
              */
-            bruttoFieldName: 'brutto'
+            bruttoFieldName: 'brutto',
+
+            /**
+             * validate for price == 0
+             * @cfg {bool}
+             */
+            validation: false
         },
-        
+
+
+
         /**
          * Constructor
          * 
@@ -48,6 +56,7 @@
          */
         initComponent: function()
         {
+            var me = this;
             var config = {
                 layout: 'hbox',
                 border: 0,
@@ -62,12 +71,22 @@
                         itemId: 'field-netto',
                         fieldLabel: 'netto',
                         name: this.getNettoFieldName(),
+
                         labelStyle: 'margin-right: 5px',
                         margin: '0 10 0 0',
                         listeners: {
                             change: {
                                 scope: this,
                                 fn: this.onNettoChange
+                            }
+                        },
+                        validator: function(value) {
+                            if (me.validation === true) {
+                                if (value <= 0 ) {
+                                    return 'Price must be greater than zero'
+                                } else {
+                                    return true;
+                                }
                             }
                         }
                     },
